@@ -1,0 +1,43 @@
+
+The libqrtr releases are generated using meson.
+
+0.1) For major releases:
+    * Increment qrtr_minor_version and reset qrtr_micro_version.
+    * Assuming API/ABI compatibility, increment both qrtr_glib_lt_current and
+      qrtr_glib_lt_age.
+
+0.2) For stable branch releases:
+    * Increment qrtr_micro_version.
+
+1) Add signed tag:
+    $ git tag -s 1.2.0
+
+   The description included in the signed tag could be:
+    Release 1.2.0
+
+2) Configure and build the whole project, making sure gtk-doc and introspection
+   are enabled:
+    $ meson setup build \
+        --prefix=/usr \
+        --buildtype=release \
+        -Dintrospection=true \
+        -Dgtk_doc=true
+    $ ninja -C build
+
+3) Run the test suite:
+    $ ninja -C build test
+
+4) Create directories for the gtk-doc documentation in freedesktop.org, and also
+   update the 'latest' links:
+    $ ssh fd.o
+    [fd.o] $ cd ${libqmi}/libqrtr-glib/
+    [fd.o] $ rm latest
+    [fd.o] $ mkdir -p ${VERSION}
+    [fd.o] $ ln -s ${VERSION} latest
+
+-------------------------------------------------------------------------------
+
+*) Verifying the signed tag requires the public key of the person who signed it,
+   e.g.:
+
+    $ curl https://www.freedesktop.org/software/libqrtr/0x3CAD53398973FFFA.asc | gpg --import
